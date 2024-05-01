@@ -52,233 +52,130 @@ import androidx.compose.runtime.rememberCoroutineScope
 
 
 
-class MainActivity : ComponentActivity() {
+public class MainActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             CollectAccelerometerDatav2Theme {
                 Box {
-//                    Button(onClick = { /*TODO*/ },
-//                        modifier = Modifier.fillMaxSize(),
-//                        colors = ButtonDefaults.buttonColors(),
-//                        ) {
-//
-//                    }
                     MainActi()
-
                 }
             }
         }
     }
-}
-
-
-//@Composable
-//fun MainActi(){
-//    val coroutineScope = rememberCoroutineScope()
-//    val context = LocalContext.current
-//    val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-//    val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!!
-//    var isConnecting = remember {mutableStateOf(false) }
-//    var isRecording = remember {mutableStateOf(false)}
-//    var currentData = remember {mutableStateOf(FloatArray(3))}
-//    val dataArray = remember{mutableStateListOf<FloatArray>()}
-//    var socket:Socket = Socket()
-//
-//    fun sendDataToServer(data: FloatArray){
-//        val str = data.toString()
-//        try {
-//            val outputStream = socket.outputStream
-//            outputStream.write(str.toByteArray())
-//            outputStream.flush()
-//        }catch(e:Exception){
-//            Log.e("Connection Error", "in sendDataToSever - Error connecting to server: ${e.message}")
-//        }
-//    }
-//
-//    val sensorEventListener = object : SensorEventListener{
-//        override fun onSensorChanged(event: SensorEvent?) {
-//            if (event !=null){
-//                currentData.value = event.values.clone()
-//                dataArray.add(currentData.value)
-//                if(isConnecting.value)
-//                {
-//                    coroutineScope.launch {
-//                        withContext(Dispatchers.IO) {
-//                            sendDataToServer(currentData.value)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-//            TODO("Not yet implemented")
-//        }
-//    }
-//    Column (modifier = Modifier.fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Top) {
-//        Button(onClick = {
-//            isRecording.value = !isRecording.value
-////            if(isRecording.value)
-////             sensorManager.registerListener(context as SensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
-////            else
-////                sensorManager.unregisterListener(context as SensorEventListener, accelerometer)
-//        },
-//            modifier = Modifier.size(width=200.dp, height = 50.dp),
-////            colors = if(isRecording.value)ButtonDefaults.disabledButtonColors() else ButtonDefaults.buttonColors()
-//            colors = if (isRecording.value) {
-//                ButtonDefaults.buttonColors(contentColor = Color.LightGray) // Set custom color for disabled state
-//            } else {
-//                ButtonDefaults.buttonColors()
-//            }
-//            ){ if(!isRecording.value)Text(text = "Start")else Text(text = "Stop")}
-////        Button(onClick = {
-//////
-////        },
-////            modifier = Modifier.size(width=200.dp, height = 50.dp)){ Text(text = "Stop Button")}
-//        Button(onClick = {
-//            isConnecting.value = !isConnecting.value
-//            if(isConnecting.value)dataArray.clear()
-//            if(isConnecting.value)
-//            {
-//                try{
-//                    socket.connect(InetSocketAddress("192.168.1.110", 8000))
-//                    val message = "connected".encodeToByteArray() // Encode message to bytes
-//                    socket.outputStream.write(message) // Send message
-//                    socket.outputStream.flush()
-//                }catch (e:Exception){
-//                    Log.e("Connection Error", "Button Connect - Error connecting to server: ${e.message}")
-//                }
-//            }
-////            else
-////                socket.close()
-////                pass
-//                         },
-//            modifier = Modifier.size(width=200.dp, height = 50.dp),
-//            colors = if (isRecording.value) {
-//                ButtonDefaults.buttonColors(contentColor = Color.LightGray) // Set custom color for disabled state
-//            } else {
-//                ButtonDefaults.buttonColors()
-//            },
-//            ){
-//            if(!isConnecting.value)Text(text = "Connect")else Text(text="Disconnect")
-//
-////            // Handle socket connection using Ktor or WorkManager (recommended)
-////            // For simplicity, a coroutine is used here (not ideal for production)
-////            viewModelScope.launch {
-////                val socket = Socket(serverInetAddress, portNumber)
-////                // ... data sending logic using the socket ...
-////            }
-//        }
-//        Button(
-//            onClick = {
-//                // Generate random values for currentData
-//                currentData.value = floatArrayOf(generateRandomFloat(), generateRandomFloat(), generateRandomFloat())
-//                dataArray.add(currentData.value)
-//                try{
-//                    socket.connect(InetSocketAddress("192.168.1.110", 8000))
-//                    val message = "connected".encodeToByteArray() // Encode message to bytes
-//                    socket.outputStream.write(message) // Send message
-//                    socket.outputStream.flush()
-//                    socket.close()
-//                }catch (e:Exception){
-//
-//                    Log.e("Connection Error", "Generate - Error connecting to server: ${e.message}")
-//                }
-////                if(isConnecting.value)
-//                    sendDataToServer(currentData.value)
-//            },
-//            modifier = Modifier.size(width = 200.dp, height = 50.dp)
-//        ) {
-//            Text(text = "Generate Trash Data")
-//        }
-//
-//        Text(text = "x= ${currentData.value[0]},y= ${currentData.value[1]},z = ${currentData.value[2]}")
-//        LazyColumn {
-//            items(dataArray) { currentData ->
-//                Text(text = currentData.contentToString()) // Display each FloatArray
-//            }
-//        }
-//
-//        // Optional DataDisplay composable to show collected data
-//    }
-//
-//    DisposableEffect(Unit) {
-//        onDispose {
-//            if(isRecording.value)sensorManager.unregisterListener(sensorEventListener,accelerometer)
-//        }
-//    }
-//
-//}
-
-fun generateRandomFloat():Float{
-    return Math.random().toFloat()
-}
-@Composable
-fun MainActi(){
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-    var isConnecting = remember {mutableStateOf(false) }
-    var isRecording = remember {mutableStateOf(false)}
-    var currentData = remember {mutableStateOf(FloatArray(3))}
-    val dataArray = remember{mutableStateListOf<FloatArray>()}
-    val socket = remember {  // Remember the socket instance
-        Socket()
-    }
-
-    fun sendDataToServer(data: FloatArray){
-//        val str = data.toString()
-        val str= "["+currentData.value[0].toString()+","+currentData.value[1].toString()+","+currentData.value[1].toString()+"]"
-
-        coroutineScope.launch {
-            withContext(Dispatchers.Default) {// Launch coroutine for network operations
-                try {
-                    val outputStream = socket.outputStream
-                    outputStream.write(str.toByteArray())
-                    outputStream.flush()
-                } catch (e: Exception) {
-                    Log.e(
-                        "Connection Error",
-                        "in sendDataToSever - Error connecting to server: ${e.message}"
-                    )
-                } finally {
-                    // Consider closing the socket here (optional)
-                }
-            }
+    @Composable
+    fun MainActi(){
+        val coroutineScope = rememberCoroutineScope()
+        val context = LocalContext.current
+        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!!
+        var isConnecting = remember {mutableStateOf(false) }
+        var isRecording = remember {mutableStateOf(false)}
+        var currentData = remember {mutableStateOf(FloatArray(3))}
+        val dataArray = remember{mutableStateListOf<FloatArray>()}
+        val socket = remember {  // Remember the socket instance
+            Socket()
         }
-    }
 
-    Column (modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top) {
-        Button(onClick = {
-
+        fun sendDataToServer(data: FloatArray){
+//        val str = data.toString()
+            val str= "["+currentData.value[0].toString()+","+currentData.value[1].toString()+","+currentData.value[1].toString()+"]"
+            Log.e("send string",str)
             coroutineScope.launch {
-                withContext(Dispatchers.Default) {// Launch coroutine for connection
+                withContext(Dispatchers.Default) {// Launch coroutine for network operations
                     try {
-                        socket.setSoTimeout(500)
-                        socket.connect(InetSocketAddress("192.168.1.110", 8000))
-                        val message = "connected".encodeToByteArray()
-                        socket.outputStream.write(message)
-                        socket.outputStream.flush()
-
-                        // Update isConnecting state based on success (optional)
+                        val outputStream = socket.outputStream
+                        outputStream.write(str.toByteArray())
+                        outputStream.flush()
                     } catch (e: Exception) {
                         Log.e(
                             "Connection Error",
-                            "Button Connect - Error connecting to server: ${e.message}"
+                            "in sendDataToSever - Error connecting to server: ${e.message}"
                         )
-                        // Update isConnecting state based on failure (optional)
-                        e.printStackTrace()
+                    } finally {
+                        // Consider closing the socket here (optional)
+                    }
+                }
+            }
+        }
+
+        val sensorEventListener = object : SensorEventListener{
+            override fun onSensorChanged(event: SensorEvent?) {
+                if (event !=null){
+                    currentData.value = event.values.clone()
+                    dataArray.add(currentData.value)
+                    if(isConnecting.value)
+                    {
+                        coroutineScope.launch {
+                            withContext(Dispatchers.IO) {
+                                sendDataToServer(currentData.value)
+                            }
+                        }
                     }
                 }
             }
 
-        },
+            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+//                TODO("Not yet implemented")
+            }
+        }
+
+        Column (modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top) {
+            Button(onClick = {
+                isRecording.value = !isRecording.value
+            if(isRecording.value)
+             sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
+            else
+                sensorManager.unregisterListener(sensorEventListener, accelerometer)
+            },
+                modifier = Modifier.size(width=200.dp, height = 50.dp),
+//            colors = if(isRecording.value)ButtonDefaults.disabledButtonColors() else ButtonDefaults.buttonColors()
+                colors = if (isRecording.value) {
+                    ButtonDefaults.buttonColors(contentColor = Color.LightGray) // Set custom color for disabled state
+                } else {
+                    ButtonDefaults.buttonColors()
+                }
+            ){ if(!isRecording.value)Text(text = "Start")else Text(text = "Stop")}
+
+            Button(onClick = {
+                isConnecting.value = !isConnecting.value
+                if(isConnecting.value) {
+                    dataArray.clear()
+                    coroutineScope.launch {
+                        withContext(Dispatchers.Default) {// Launch coroutine for connection
+                            try {
+                                socket.setSoTimeout(500)
+                                socket.connect(InetSocketAddress("192.168.1.110", 8000))
+                                val message = "connected".encodeToByteArray()
+                                socket.outputStream.write(message)
+                                socket.outputStream.flush()
+
+                                // Update isConnecting state based on success (optional)
+                            } catch (e: Exception) {
+                                Log.e(
+                                    "Connection Error",
+                                    "Button Connect - Error connecting to server: ${e.message}"
+                                )
+                                // Update isConnecting state based on failure (optional)
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+                }
+            else
+                socket.close()
+//                pass
+            },
+                modifier = Modifier.size(width=200.dp, height = 50.dp),
+                colors = if (isRecording.value) {
+                    ButtonDefaults.buttonColors(contentColor = Color.LightGray) // Set custom color for disabled state
+                } else {
+                    ButtonDefaults.buttonColors()
+                },
             ){
-            if(!isConnecting.value)Text(text = "        Connect        ")else Text(text="Disconnect")
+                if(!isConnecting.value)Text(text = "Connect")else Text(text="Disconnect")
 
 //            // Handle socket connection using Ktor or WorkManager (recommended)
 //            // For simplicity, a coroutine is used here (not ideal for production)
@@ -286,48 +183,42 @@ fun MainActi(){
 //                val socket = Socket(serverInetAddress, portNumber)
 //                // ... data sending logic using the socket ...
 //            }
-        }
-        Button(
-            onClick = {
-                // Generate random values for currentData
-                currentData.value = floatArrayOf(generateRandomFloat(), generateRandomFloat(), generateRandomFloat())
-                dataArray.add(currentData.value)
-                val str= "["+currentData.value[0].toString()+","+currentData.value[1].toString()+","+currentData.value[1].toString()+"]"
-                Log.e("send string", str)
-//                coroutineScope.launch{
-//                    withContext(Dispatchers.Default){  // Launch coroutine for connection
-//                        try {
-//                            socket.setSoTimeout(500)
-//                            socket.connect(InetSocketAddress("192.168.1.110", 8000))
-//                            val message = currentData.toString().encodeToByteArray()
-//                            socket.outputStream.write(message)
-//                            socket.outputStream.flush()
-//                            // Update isConnecting state based on success (optional)
-//                        } catch (e: Exception) {
-//                            Log.e("Connection Error", "Button Connect - Error connecting to server: ${e.message} ")
-//                            // Update isConnecting state based on failure (optional)
-//                            e.printStackTrace()
-//                        }
-//
-//                    }
-//                }
-//                if(isConnecting.value)
-                sendDataToServer(currentData.value)
-            },
-        ) {
-            Text(text = "Generate Trash Data")
+            }
+            Button(
+                onClick = {
+                    // Generate random values for currentData
+                    currentData.value = floatArrayOf(generateRandomFloat(), generateRandomFloat(), generateRandomFloat())
+                    dataArray.add(currentData.value)
+                    sendDataToServer(currentData.value)
+                },
+                modifier = Modifier.size(width = 200.dp, height = 50.dp)
+            ) {
+                Text(text = "Generate Trash Data")
+            }
+
+            Text(text = "x= ${currentData.value[0]},y= ${currentData.value[1]},z = ${currentData.value[2]}")
+            LazyColumn {
+                items(dataArray) { currentData ->
+                    Text(text = currentData.contentToString()) // Display each FloatArray
+                }
+            }
+
+            // Optional DataDisplay composable to show collected data
         }
 
-//        Text(text = "x= ${currentData.value[0]},y= ${currentData.value[1]},z = ${currentData.value[2]}")
-//        LazyColumn {
-//            items(dataArray) { currentData ->
-//                Text(text = currentData.contentToString()) // Display each FloatArray
-//            }
-//        }
+        DisposableEffect(Unit) {
+            onDispose {
+                if(isRecording.value)sensorManager.unregisterListener(sensorEventListener,accelerometer)
+            }
+        }
 
-        // Optional DataDisplay composable to show collected data
     }
 
-
+    fun generateRandomFloat():Float{
+        return Math.random().toFloat()
+    }
 
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
