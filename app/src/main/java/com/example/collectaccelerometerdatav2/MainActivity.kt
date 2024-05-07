@@ -65,10 +65,29 @@ public class MainActivity : ComponentActivity(){
             Socket()
         }
 
+        fun formatterNumber(Number:Float):String{
+//            var number=Number;
+//            var sgn=""
+//            if(number<0){number*=-1;sgn="-"}
+//
+//            var integerPart = number.toInt().toString()
+//            var decimalPart = (number % number.toInt()).toString()
+//
+//            while(decimalPart.length<7)decimalPart+="0"
+//            decimalPart = decimalPart.substring(2,7)//"0.abcd" ->"abcd"
+//            while((sgn+integerPart).length<4)integerPart="0"+integerPart
+//            integerPart=sgn+integerPart
+//            return integerPart+"."+decimalPart
+            var tmp=Number.toString()
+            while(tmp.length<12)tmp+="0"
+            return tmp
+        }
+
         fun sendDataToServer(data: FloatArray){
             val currentTimeMillis = SystemClock.elapsedRealtime()
 
-            val str= "["+data[0].toString()+","+data[1].toString()+","+data[1].toString()+"]" + "time: "+currentTimeMillis.toString()
+//            val str= "["+data[0].toString()+","+data[1].toString()+","+data[1].toString()+"]" + "time: "+currentTimeMillis.toString()
+            val str = formatterNumber(data[0])+","+formatterNumber(data[1])+","+formatterNumber(data[2])+","+currentTimeMillis.toString()
             Log.e("send string",str)
             coroutineScope.launch {
                 withContext(Dispatchers.Default) {// Launch coroutine for network operations
