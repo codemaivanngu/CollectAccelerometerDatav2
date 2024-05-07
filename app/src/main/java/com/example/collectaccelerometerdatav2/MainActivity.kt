@@ -66,18 +66,6 @@ public class MainActivity : ComponentActivity(){
         }
 
         fun formatterNumber(Number:Float):String{
-//            var number=Number;
-//            var sgn=""
-//            if(number<0){number*=-1;sgn="-"}
-//
-//            var integerPart = number.toInt().toString()
-//            var decimalPart = (number % number.toInt()).toString()
-//
-//            while(decimalPart.length<7)decimalPart+="0"
-//            decimalPart = decimalPart.substring(2,7)//"0.abcd" ->"abcd"
-//            while((sgn+integerPart).length<4)integerPart="0"+integerPart
-//            integerPart=sgn+integerPart
-//            return integerPart+"."+decimalPart
             var tmp=Number.toString()
             while(tmp.length<12)tmp+="0"
             return tmp
@@ -87,7 +75,7 @@ public class MainActivity : ComponentActivity(){
             val currentTimeMillis = SystemClock.elapsedRealtime()
 
 //            val str= "["+data[0].toString()+","+data[1].toString()+","+data[1].toString()+"]" + "time: "+currentTimeMillis.toString()
-            val str = formatterNumber(data[0])+","+formatterNumber(data[1])+","+formatterNumber(data[2])+","+currentTimeMillis.toString()
+            val str ="&&&&&&&&&,"+ formatterNumber(data[0])+","+formatterNumber(data[1])+","+formatterNumber(data[2])+","+currentTimeMillis.toString()+",&&&&&&&"
             Log.e("send string",str)
             coroutineScope.launch {
                 withContext(Dispatchers.Default) {// Launch coroutine for network operations
@@ -138,7 +126,7 @@ public class MainActivity : ComponentActivity(){
             else
                 sensorManager.unregisterListener(sensorEventListener, accelerometer)
             },
-                modifier = Modifier.size(width=200.dp, height = 50.dp),
+//                modifier = Modifier.size(width=200.dp, height = 50.dp),
 //            colors = if(isRecording.value)ButtonDefaults.disabledButtonColors() else ButtonDefaults.buttonColors()
                 colors = if (isRecording.value) {
                     ButtonDefaults.buttonColors(contentColor = Color.LightGray) // Set custom color for disabled state
@@ -155,7 +143,7 @@ public class MainActivity : ComponentActivity(){
                         coroutineScope.launch {
                             withContext(Dispatchers.Default) {// Launch coroutine for connection
                                 try {
-                                    socket.setSoTimeout(500)
+                                    socket.setSoTimeout(50)
                                     socket.connect(InetSocketAddress("192.168.1.110", 8000))
                                     val message = "connected".encodeToByteArray()
                                     socket.outputStream.write(message)
@@ -172,11 +160,9 @@ public class MainActivity : ComponentActivity(){
                                 }
                             }
                         }
-                    } else
-                        socket.close()
-//                pass
+                    } else socket.close()
                 },
-                modifier = Modifier.size(width = 200.dp, height = 50.dp),
+//                modifier = Modifier.size(width = 200.dp, height = 50.dp),
                 colors = if (isRecording.value) {
                     ButtonDefaults.buttonColors(contentColor = Color.LightGray) // Set custom color for disabled state
                 } else {
@@ -199,11 +185,12 @@ public class MainActivity : ComponentActivity(){
                     dataArray.add(currentData.value)
                     sendDataToServer(currentData.value)
                 },
-                modifier = Modifier.size(width = 200.dp, height = 50.dp)
+//                modifier = Modifier.size(width = 200.dp, height = 50.dp)
             ) {
                 Text(text = "Generate Trash Data")
             }
-
+            Text(text = "isRecording = ${isRecording.value}")
+            Text(text = "isConnecting = ${isConnecting.value}")
             Text(text = "x= ${currentData.value[0]},y= ${currentData.value[1]},z = ${currentData.value[2]}")
             LazyColumn {
                 items(dataArray) { currentData ->
