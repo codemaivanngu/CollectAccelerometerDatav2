@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.nio.charset.Charset
 
 
 public class MainActivity : ComponentActivity(){
@@ -58,6 +59,7 @@ public class MainActivity : ComponentActivity(){
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!!
         var isConnecting = remember {mutableStateOf(false) }
+        var isConnected = remember {mutableStateOf(false)}
         var isRecording = remember {mutableStateOf(false)}
         var currentData = remember {mutableStateOf(FloatArray(3))}
         val dataArray = remember{mutableStateListOf<FloatArray>()}
@@ -67,7 +69,12 @@ public class MainActivity : ComponentActivity(){
 
         fun formatterNumber(Number:Float):String{
             var tmp=Number.toString()
-            while(tmp.length<12)tmp+="0"
+            while(tmp.length<20)tmp+=" "
+            return tmp
+        }
+        fun formatterNumber(Number:Long):String{
+            var tmp=Number.toString()
+            while(tmp.length<20)tmp+=" "
             return tmp
         }
 
@@ -75,13 +82,14 @@ public class MainActivity : ComponentActivity(){
             val currentTimeMillis = SystemClock.elapsedRealtime()
 
 //            val str= "["+data[0].toString()+","+data[1].toString()+","+data[1].toString()+"]" + "time: "+currentTimeMillis.toString()
-            val str ="&&&&&&&&&,"+ formatterNumber(data[0])+","+formatterNumber(data[1])+","+formatterNumber(data[2])+","+currentTimeMillis.toString()+",&&&&&&&"
+            val str =formatterNumber(data[0])+","+formatterNumber(data[1])+","+formatterNumber(data[2])+","+currentTimeMillis.toString()
             Log.e("send string",str)
             coroutineScope.launch {
                 withContext(Dispatchers.Default) {// Launch coroutine for network operations
                     try {
                         val outputStream = socket.outputStream
-                        outputStream.write(str.toByteArray())
+                        outputStream.write((formatterNumber(data[0])+formatterNumber(data[1])+formatterNumber(data[2])+formatterNumber(currentTimeMillis)).encodeToByteArray())
+
                         outputStream.flush()
                     } catch (e: Exception) {
                         Log.e(
@@ -148,6 +156,7 @@ public class MainActivity : ComponentActivity(){
                                     val message = "connected".encodeToByteArray()
                                     socket.outputStream.write(message)
                                     socket.outputStream.flush()
+                                    isConnected.value = true
 
                                     // Update isConnecting state based on success (optional)
                                 } catch (e: Exception) {
@@ -160,7 +169,11 @@ public class MainActivity : ComponentActivity(){
                                 }
                             }
                         }
-                    } else socket.close()
+                    } else
+                    {
+                        socket.close()
+                        isConnected.value = false
+                    }
                 },
 //                modifier = Modifier.size(width = 200.dp, height = 50.dp),
                 colors = if (isRecording.value) {
@@ -191,6 +204,8 @@ public class MainActivity : ComponentActivity(){
             }
             Text(text = "isRecording = ${isRecording.value}")
             Text(text = "isConnecting = ${isConnecting.value}")
+            Text(text = "isConnected = ${isConnected.value}")
+            Text(text = "hostname = 10.17.3.151       port = 8000")
             Text(text = "x= ${currentData.value[0]},y= ${currentData.value[1]},z = ${currentData.value[2]}")
             LazyColumn {
                 items(dataArray) { currentData ->
@@ -212,6 +227,10 @@ public class MainActivity : ComponentActivity(){
     fun generateRandomFloat():Float{
         return Math.random().toFloat()
     }
+    fun getStringSizeInBytes(text: String): Int {
+        return text.encodeToByteArray().size // No need for the charset argument here
+    }
+
 
 }
 
